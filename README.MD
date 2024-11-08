@@ -13,14 +13,15 @@
 - You can switch a language on each page and log out
 
 ## You can start this app two ways:
+
 ### First:
+
 - command: mvn clean install
 - docker-compose up --build
 
-
 ### Or you can follow this instruction:
+
 - docker run --name mysql-shop -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=shop -p 3306:3306 -d mysql:latest
-- apply shop_schema.sql
-- run main to fill the database
+- apply V1__init.sql
 - to start from idea: Run-> Edit configuration -> TomCat 10,
   Deployment <span style="color:yellow; font-size:15px;">/</span>
