@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{admin.title}"></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body>
+<div th:insert="~{util/header :: header}"></div>
+
+<h1 th:text="#{admin.greetings}"></h1>
+<br>
+<h2 th:text="#{admin.find_user}"></h2>
+<form th:action="@{/findUserById}" method="get">
+    <label for="userId" th:text="#{admin.user_id}"></label>
+    <input type="number" id="userId" name="userId" required>
+    <button type="submit" class="btn btn-info" th:text="#{admin.find_button}"></button>
+</form>
+
+<div th:if="${foundUser}">
+    <h2 th:text="#{admin.user_detail}"></h2>
+    <p><span th:text="#{admin.user_id}"></span>: <span th:text="${foundUser.id}"></span></p>
+    <p><span th:text="#{admin.user_first_name}"></span>: <span th:text="${foundUser.firstName}"></span></p>
+    <p><span th:text="#{admin.user_last_name}"></span>: <span th:text="${foundUser.lastName}"></span></p>
+    <p><span th:text="#{admin.user_email}"></span>: <span th:text="${foundUser.email}"></span></p>
+    <p><span th:text="#{admin.user_phone}"></span>: <span th:text="${foundUser.phoneNumber}"></span></p>
+    <p><span th:text="#{admin.user_address}"></span>: <span th:text="${foundUser.address}"></span></p>
+    <p><span th:text="#{admin.user_role}"></span>: <span th:text="${foundUser.role.userRole}"></span></p>
+</div>
+
+<div th:if="${errorMessage}">
+    <p style="color:red" th:text="${errorMessage}"></p>
+</div>
+<br>
+<h2 th:text="#{admin.all_users}"></h2>
+<form th:action="@{/report}" method="get" class="float-right">
+    <input type="hidden" name="reportType" value="allUsers"/>
+    <button type="submit" class="btn btn-secondary btn-sm" th:text="#{admin.download_report}"></button>
+</form>
+
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th th:text="#{admin.user_id}"></th>
+        <th th:text="#{admin.user_first_name}"></th>
+        <th th:text="#{admin.user_last_name}"></th>
+        <th th:text="#{admin.user_email}"></th>
+        <th th:text="#{admin.user_phone}"></th>
+        <th th:text="#{admin.user_address}"></th>
+        <th th:text="#{admin.user_role}"></th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.firstName}"></td>
+        <td th:text="${user.lastName}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.phoneNumber}"></td>
+        <td th:text="${user.address}"></td>
+        <td th:text="${user.role.userRole}"></td>
+        <td>
+            <form th:action="@{/deleteUser}" method="get">
+                <input type="hidden" name="userId" th:value="${user.id}"/>
+                <button type="submit" class="btn btn-danger" th:text="#{admin.delete_user}"></button>
+            </form>
+            <form th:action="@{/editUser}" method="get">
+                <input type="hidden" name="userId" th:value="${user.id}"/>
+                <button type="submit" class="btn btn-secondary" th:text="#{admin.update_user}"></button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

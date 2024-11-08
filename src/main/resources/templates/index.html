@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{main.title}">Main Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+
+<div th:insert="~{util/header :: header}"></div>
+
+<br><br>
+<h1 th:text="#{main.greetings}"></h1>
+<br><br>
+
+<form th:action="@{/login}" method="get">
+    <button type="submit" class="btn btn-info" th:text="#{main.login}"></button>
+</form>
+<br><br>
+
+<form th:action="@{/createUser}" method="get">
+    <button type="submit" class="btn btn-secondary" th:text="#{main.create}"></button>
+</form>
+
+</body>
+</html>

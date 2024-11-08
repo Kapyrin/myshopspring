@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="header">
+    <div th:insert="~{util/languageSwitch :: languageSwitch}"></div>
+
+
+    <div>
+        <a th:href="@{/logout}" class="btn btn-danger" th:text="#{logout.button}">Logout</a>
+    </div>
+</div>
+</body>
+</html>

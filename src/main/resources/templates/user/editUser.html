@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+<div th:insert="~{util/header :: header}"></div>
+<br><br>
+<form th:action="@{/editUser}" method="post">
+  <input type="hidden" name="userId" th:value="${user.id}"/>
+
+  <label for="firstName" th:text="#{admin.user_first_name}"></label>
+  <input type="text" id="firstName" name="firstName" th:value="${user.firstName}" required>
+  <br><br>
+
+  <label for="lastName" th:text="#{admin.user_last_name}"></label>
+  <input type="text" id="lastName" name="lastName" th:value="${user.lastName}" required>
+  <br><br>
+
+  <label for="email" th:text="#{admin.user_email}"></label>
+  <input type="email" id="email" name="email" th:value="${user.email}" required>
+  <br><br>
+
+  <label for="password" th:text="#{admin.user_password}"></label>
+  <input type="password" id="password" name="password" th:value="${user.password}" required>
+  <br><br>
+
+  <label for="phoneNumber" th:text="#{admin.user_phone}"></label>
+  <input type="text" id="phoneNumber" name="phoneNumber" th:value="${user.phoneNumber}">
+  <br><br>
+
+  <label for="address" th:text="#{admin.user_address}"></label>
+  <input type="text" id="address" name="address" th:value="${user.address}">
+  <br><br>
+
+  <label for="role" th:text="#{admin.user_role}"></label>
+  <select id="role" name="role">
+    <option value="admin">Admin</option>
+    <option value="manager">Manager</option>
+    <option value="customer">Customer</option>
+  </select>
+  <br><br>
+
+  <button type="submit" class="btn btn-info" th:text="#{admin.save_changes}"></button>
+</form>
+</body>
+</html>

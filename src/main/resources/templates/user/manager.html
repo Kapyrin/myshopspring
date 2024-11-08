@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{manager.greetings}"></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
+</head>
+<body>
+<div th:insert="~{util/header :: header}"></div>
+
+<br>
+<div class="text-right mt-4">
+    <a href="/products" class="btn btn-dark" th:text="#{manager.product_management}"></a>
+</div>
+
+<h2 th:text="#{managers.title}"></h2>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <form action="/managers" method="get">
+                <div class="form-group">
+                    <label for="productId" th:text="#{manager.sort_orders_by_selecting_product}"></label>
+                    <select id="productId" name="productId" class="form-control">
+                        <option th:each="product : ${products}"
+                                th:value="${product.id}"
+                                th:text="${product.productName}"></option>
+                    </select>
+                </div>
+                <button type="submit" name="action" value="filterByProduct" class="btn btn-primary" th:text="#{manager.filter_by_product}"></button>
+            </form>
+
+            <div th:if="${not #lists.isEmpty(filteredOrders)}">
+                <h2 th:text="#{orders.filter}"></h2>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th th:text="#{orders.id}"></th>
+                        <th th:text="#{orders.creationDate}"></th>
+                        <th th:text="#{orders.status}"></th>
+                        <th th:text="#{orders.products}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="order : ${filteredOrders}">
+                        <td th:text="${order.id}"></td>
+                        <td th:text="${order.orderCreationDate}"></td>
+                        <td th:text="${order.status.statusName}"></td>
+                        <td>
+                            <ul>
+                                <li th:each="product : ${orderProducts[order.id]}"
+                                    th:text="${product.productName + ' - ' + product.price}"></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:if="${#lists.isEmpty(filteredOrders)}">
+                <h2 th:text="#{orders.all_orders}"></h2>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th th:text="#{orders.id}"></th>
+                        <th th:text="#{orders.creationDate}"></th>
+                        <th th:text="#{orders.status}"></th>
+                        <th th:text="#{orders.products}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="order, iterStat : ${allOrders}" th:if="${iterStat.index < 10}">
+                    <td th:text="${order.id}"></td>
+                        <td th:text="${order.orderCreationDate}"></td>
+                        <td th:text="${order.status.statusName}"></td>
+                        <td>
+                            <ul>
+                                <li th:each="product : ${orderProducts[order.id]}"
+                                    th:text="${product.productName + ' - ' + product.price}"></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <br><br>
+            <form action="/managers" method="post">
+                <div class="form-group">
+                    <label for="deleteBeforeDate" th:text="#{manager.delete_before_date}"></label>
+                    <input type="date" id="deleteBeforeDate" name="deleteBeforeDate" class="form-control" required />
+                </div>
+                <button type="submit" name="action" value="deleteBeforeDate" class="btn btn-danger" th:text="#{manager.delete_orders}"></button>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <h2 th:text="#{manager.greetings}"></h2>
+                <form th:action="@{/report}" method="get" class="float-right mt-2">
+                    <input type="hidden" name="reportType" value="usersOrders" />
+                    <button type="submit" class="btn btn-secondary btn-sm" th:text="#{manager.download_report}"></button>
+                </form>
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th th:text="#{manager.id}"></th>
+                    <th th:text="#{manager.first_name}"></th>
+                    <th th:text="#{manager.last_name}"></th>
+                    <th th:text="#{manager.email}"></th>
+                    <th th:text="#{manager.phone}"></th>
+                    <th th:text="#{manager.orders}"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.firstName}"></td>
+                    <td th:text="${user.lastName}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td th:text="${user.phoneNumber}"></td>
+                    <td>
+                        <div th:each="order : ${userOrders[user.id]}">
+                            <div>
+                                Order ID: <span th:text="${order.id}"></span>,
+                                Date creation: <span th:text="${order.orderCreationDate}"></span>,
+                                Status: <span th:text="${order.status.statusName}"></span>
+                                <ul>
+                                    <li th:each="product : ${orderProducts[order.id]}"
+                                        th:text="${product.productName + ' - ' + product.price}"></li>
+                                </ul>
+                                <form action="/managers" method="post">
+                                    <input type="hidden" name="action" value="closeOrder" />
+                                    <input type="hidden" name="orderId" th:value="${order.id}" />
+                                    <button type="submit" class="btn btn-success btn-sm" th:text="#{manager.close_order}"></button>
+                                </form>
+                                <form action="/managers" method="post">
+                                    <input type="hidden" name="action" value="updateStatus" />
+                                    <input type="hidden" name="orderId" th:value="${order.id}" />
+                                    <select name="statusId" class="form-control">
+                                        <option th:each="status : ${statuses}"
+                                                th:value="${status.id}"
+                                                th:selected="${status.id == order.status.id}"
+                                                th:text="${status.statusName}"></option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary btn-sm" th:text="#{manager.update_status}"></button>
+                                </form>
+                                <hr />
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br>
+</body>
+</html>
