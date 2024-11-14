@@ -124,6 +124,7 @@ public class ShopOrderImplService implements ShopOrderService {
         log.info("Closing order: {}", orderId);
         try {
             shopOrderRepository.closeOrder(orderId, closeStatusId);
+
             log.info("Closed order: {}", orderId);
         } catch (Exception e) {
             log.error("Error while closing order: {}", orderId, e);

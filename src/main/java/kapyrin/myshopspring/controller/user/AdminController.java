@@ -2,8 +2,7 @@ package kapyrin.myshopspring.controller.user;
 
 import jakarta.servlet.http.HttpSession;
 import kapyrin.myshopspring.entity.User;
-import kapyrin.myshopspring.service.impl.UserImplService;
-import org.hibernate.Session;
+import kapyrin.myshopspring.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +16,7 @@ import java.util.Optional;
 public class AdminController {
 
     @Autowired
-    private UserImplService userService;
+    private UserService userService;
 
     @GetMapping("/admin")
     public String showAdminPage(Model model, HttpSession session) {
