@@ -3,6 +3,9 @@ package kapyrin.myshopspring.controller.user;
 import jakarta.servlet.http.HttpSession;
 import kapyrin.myshopspring.entity.*;
 import kapyrin.myshopspring.service.impl.*;
+import kapyrin.myshopspring.service.interfaces.ProductOrderService;
+import kapyrin.myshopspring.service.interfaces.ShopOrderService;
+import kapyrin.myshopspring.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,15 +21,15 @@ import java.util.stream.Collectors;
 public class ManagerController {
 
     @Autowired
-    private UserImplService userService;
+    private UserService userService;
     @Autowired
-    private ShopOrderImplService shopOrderService;
+    private ShopOrderService shopOrderService;
     @Autowired
     private ProductImplService productService;
     @Autowired
     private OrderStatusImplService orderStatusService;
     @Autowired
-    private ProductOrderImplService productOrderService;
+    private ProductOrderService productOrderService;
 
     @GetMapping("/managers")
     public String getManagersPage(@RequestParam(value = "action", required = false) String action,

@@ -32,6 +32,8 @@ public class RoleAccessFilter implements Filter {
         urlRoleMapping.put("/addProduct", "manager");
         urlRoleMapping.put("/products", "manager");
         urlRoleMapping.put("/editUser", "admin");
+        urlRoleMapping.put("/findUserById", "admin");
+        urlRoleMapping.put("/deleteUser", "admin");
     }
 
     @Override

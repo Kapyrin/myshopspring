@@ -11,7 +11,7 @@
     - As an admin - you will see all users(including managers and admins), search for user by id and edit or delete
       users, download a report of users.
 - You can switch a language on each page and log out
-
+- Service and controller layers has been tested.
 ## You can start this app two ways:
 
 ### First:

@@ -1,7 +1,9 @@
 package kapyrin.myshopspring.controller.user;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import kapyrin.myshopspring.entity.User;
-import kapyrin.myshopspring.service.impl.UserImplService;
+import kapyrin.myshopspring.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,16 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-
 import java.util.Optional;
 
 @Controller
 public class LogInOutController {
 
     @Autowired
-    private UserImplService userService;
+    private UserService userService;
 
     @PostMapping("/login")
     public String login(@RequestParam("email") String email,

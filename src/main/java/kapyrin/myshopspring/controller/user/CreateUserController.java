@@ -4,6 +4,8 @@ import kapyrin.myshopspring.entity.Role;
 import kapyrin.myshopspring.entity.User;
 import kapyrin.myshopspring.service.impl.RoleImplService;
 import kapyrin.myshopspring.service.impl.UserImplService;
+import kapyrin.myshopspring.service.interfaces.RoleService;
+import kapyrin.myshopspring.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,9 +19,9 @@ import java.util.Optional;
 public class CreateUserController {
 
     @Autowired
-    private final UserImplService userService;
+    private final UserService userService;
     @Autowired
-    private final  RoleImplService roleService;
+    private final RoleService roleService;
 
     public CreateUserController(UserImplService userService, RoleImplService roleService) {
         this.userService = userService;

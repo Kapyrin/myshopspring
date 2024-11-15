@@ -5,6 +5,8 @@ import kapyrin.myshopspring.entity.User;
 import kapyrin.myshopspring.service.impl.RoleImplService;
 import kapyrin.myshopspring.service.impl.UserImplService;
 
+import kapyrin.myshopspring.service.interfaces.RoleService;
+import kapyrin.myshopspring.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,8 +20,8 @@ import java.util.Optional;
 @Controller
 public class EditUserController {
 
-    private final UserImplService userService;
-    private final RoleImplService roleService;
+    private final UserService userService;
+    private final RoleService roleService;
 
 
     @Autowired
