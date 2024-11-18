@@ -2,8 +2,8 @@ package kapyrin.myshopspring;
 
 import org.junit.jupiter.api.BeforeEach;
 
-public abstract class AbstractTest {
 
+public abstract class AbstractTest {
 
     @BeforeEach
     void setUp() {

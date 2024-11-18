@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,7 +31,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-
 class ManagerControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -58,10 +58,11 @@ class ManagerControllerTest {
 
     @Test
     void getManagersPage() throws Exception {
-        utilUsersForController.notAuthenticatedUser(mockMvc,URL_MANAGERS);
+        utilUsersForController.notAuthenticatedUser(mockMvc, URL_MANAGERS);
 
         userManager = utilUsersForController.getManagerUser();
         mockMvc.perform(get(URL_MANAGERS)
+                        .with(SecurityMockMvcRequestPostProcessors.user(userManager.getEmail()).roles("MANAGER"))
                         .sessionAttr("user", userManager))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("user/manager"))
@@ -74,7 +75,7 @@ class ManagerControllerTest {
 
     @Test
     void handlePostActionsDeleteBeforeDate() throws Exception {
-        utilUsersForController.notAuthenticatedUser(mockMvc,URL_MANAGERS);
+        utilUsersForController.notAuthenticatedUser(mockMvc, URL_MANAGERS);
 
         userManager = utilUsersForController.getManagerUser();
 
@@ -84,6 +85,7 @@ class ManagerControllerTest {
         Date deleteDate = Date.valueOf(LocalDate.of(2024, 11, 11));
 
         mockMvc.perform(post("/managers")
+                        .with(SecurityMockMvcRequestPostProcessors.user(userManager.getEmail()).roles("MANAGER"))
                         .sessionAttr("user", userManager)
                         .param("action", "deleteBeforeDate")
                         .param("deleteBeforeDate", deleteDate.toString()))
@@ -97,7 +99,7 @@ class ManagerControllerTest {
 
     @Test
     void handlePOstActionUpdateStatus() throws Exception {
-        utilUsersForController.notAuthenticatedUser(mockMvc,URL_MANAGERS);
+        utilUsersForController.notAuthenticatedUser(mockMvc, URL_MANAGERS);
 
         userManager = utilUsersForController.getManagerUser();
         prepareOrder();
@@ -107,6 +109,7 @@ class ManagerControllerTest {
         assertNotEquals(currentStatusId, newStatusId);
 
         mockMvc.perform(post(URL_MANAGERS)
+                        .with(SecurityMockMvcRequestPostProcessors.user(userManager.getEmail()).roles("MANAGER"))
                         .sessionAttr("user", userManager)
                         .param("action", "updateStatus")
                         .param("orderId", shopOrder.getId().toString())
@@ -121,7 +124,7 @@ class ManagerControllerTest {
 
     @Test
     void handlePostActionsCloseOrder() throws Exception {
-        utilUsersForController.notAuthenticatedUser(mockMvc,URL_MANAGERS);
+        utilUsersForController.notAuthenticatedUser(mockMvc, URL_MANAGERS);
 
         userManager = utilUsersForController.getManagerUser();
         prepareOrder();
@@ -131,13 +134,14 @@ class ManagerControllerTest {
         assertNotEquals(4l, shopOrder.getStatus().getId());
 
         mockMvc.perform(post(URL_MANAGERS)
+                        .with(SecurityMockMvcRequestPostProcessors.user(userManager.getEmail()).roles("MANAGER"))
                         .sessionAttr("user", userManager)
                         .param("action", "closeOrder")
                         .param("orderId", shopOrder.getId().toString()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl(URL_MANAGERS));
 
-        ShopOrder closedShopOrder =shopOrderService.getById(shopOrder.getId()).get();
+        ShopOrder closedShopOrder = shopOrderService.getById(shopOrder.getId()).get();
         assertEquals(4L, closedShopOrder.getStatus().getId());
         assertEquals(Date.valueOf(LocalDate.now()), closedShopOrder.getOrderCloseDate());
     }

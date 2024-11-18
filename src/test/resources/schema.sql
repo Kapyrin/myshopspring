@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users
     first_name   VARCHAR(50)        NOT NULL,
     last_name    VARCHAR(50)        NOT NULL,
     email        VARCHAR(50) UNIQUE NOT NULL,
-    password     VARCHAR(50)        NOT NULL,
+    password     VARCHAR(60)        NOT NULL,
     phone_number VARCHAR(20) UNIQUE NOT NULL,
     address      VARCHAR(100)       NOT NULL,
     role_id      BIGINT,
@@ -60,13 +60,13 @@ VALUES ('admin'),
        ('customer');
 
 INSERT INTO users (first_name, last_name, email, password, phone_number, address, role_id)
-VALUES ('Main', 'Admin', 'admin@admin.ru', 'admin_passport', '+79997057796', 'Bryansk', 1),
+VALUES ('Main', 'Admin', 'admin@admin.ru', '$2a$10$LRjsrby8q3DBWiEFmiCn1.aEiUXozePemEFcIhkdw.G5kYbP9R/oW', '+79997057796', 'Bryansk', 1),
 
-       ('Bill', 'Gates', 'bill@microsot.com', 'password', '0987654321', 'Ostin', 2),
+       ('Bill', 'Gates', 'bill@microsot.com', '$2a$10$1cPy8AO4u1issvhp11uU1OEiIAcsLirMnw5nqJ0domeu5lwFWHVya', '0987654321', 'Ostin', 2),
 
-       ('Vladimir', 'Kapyrin', 'vladimir.kapyrin@gmail.com', 'password', '1234567890', 'Russia', 3),
+       ('Vladimir', 'Kapyrin', 'vladimir.kapyrin@gmail.com', '$2a$10$w9vK3ZUJT3h0Y.EkybKMJecytid6QYFzZaEJEnamoCYimdIIQ6t6K', '1234567890', 'Russia', 3),
 
-       ('Elon', 'Musk', 'elon@tesla.com', 'password', '1234509876', 'Redmond', 2);
+       ('Elon', 'Musk', 'elon@tesla.com', '$2a$10$uzcMruZSdZPwv62wz2i2Beb/FJxQSjHkBD0XMuYFFKn8i4KfB8g.e', '1234509876', 'Redmond', 2);
 
 
 INSERT INTO order_status (status_name)

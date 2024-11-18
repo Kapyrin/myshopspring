@@ -35,10 +35,11 @@ public class ServiceTestUtil {
                 .password("password")
                 .phoneNumber("+7999324023")
                 .address("Tver")
-                .role(roleService.getByRoleName("manager").get())
+                .role(roleService.getById(3L).get())
                 .build();
 
         userService.add(customer);
+
         return customer;
     }
 

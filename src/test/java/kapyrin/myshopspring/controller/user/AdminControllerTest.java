@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,7 +44,9 @@ class AdminControllerTest {
         utilUsersForController.notAuthenticatedUser(mockMvc, URL_ADMIN);
 
         user = utilUsersForController.getAdminUser();
-        mockMvc.perform(get(URL_ADMIN).sessionAttr("user", user))
+        mockMvc.perform(get(URL_ADMIN)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("ADMIN"))
+                        .sessionAttr("user", user))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("user/admin"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("users"));
@@ -55,6 +58,7 @@ class AdminControllerTest {
 
         user = utilUsersForController.getAdminUser();
         mockMvc.perform(get(URL_FIND_BY_ID)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("ADMIN"))
                         .sessionAttr("user", user)
                         .param("userId", user.getId().toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -68,6 +72,7 @@ class AdminControllerTest {
 
         user = utilUsersForController.getAdminUser();
         mockMvc.perform(get(URL_DELETE_USER)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("ADMIN"))
                         .sessionAttr("user", user)
                         .param("userId", user.getId().toString()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())

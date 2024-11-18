@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -33,7 +36,11 @@ class EditUserControllerTest {
 
     @Autowired
     private UtilUsersForController utilUsersForController;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     private final String URL_EDIT_USER = "/editUser";
+    private final String RAW_PASSWORD = "password";
 
     private User user;
 
@@ -44,6 +51,7 @@ class EditUserControllerTest {
 
         user = utilUsersForController.getAdminUser();
         mockMvc.perform(get(URL_EDIT_USER)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("ADMIN"))
                         .sessionAttr("user", user)
                         .param("userId", user.getId().toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -52,6 +60,7 @@ class EditUserControllerTest {
                 .andExpect(MockMvcResultMatchers.model().attribute("user", user));
 
         mockMvc.perform(get(URL_EDIT_USER)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("ADMIN"))
                         .sessionAttr("user", user)
                         .param("userId", "100"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
@@ -65,12 +74,13 @@ class EditUserControllerTest {
 
         user = utilUsersForController.getAdminUser();
         mockMvc.perform(post("/editUser")
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("ADMIN"))
                         .sessionAttr("user", user)
                         .param("userId", user.getId().toString())
                         .param("firstName", "UpdatedFirstName")
                         .param("lastName", "UpdatedLastName")
                         .param("email", "updated@user.com")
-                        .param("password", "password")
+                        .param("password", RAW_PASSWORD)
                         .param("phoneNumber", "+79036443344")
                         .param("address", "Gotem City")
                         .param("role", "admin"))
@@ -83,8 +93,10 @@ class EditUserControllerTest {
         assertThat(updatedUser.get().getFirstName()).isEqualTo("UpdatedFirstName");
         assertThat(updatedUser.get().getLastName()).isEqualTo("UpdatedLastName");
         assertThat(updatedUser.get().getEmail()).isEqualTo("updated@user.com");
-        assertThat(updatedUser.get().getPassword()).isEqualTo("password");
         assertThat(updatedUser.get().getPhoneNumber()).isEqualTo("+79036443344");
         assertThat(updatedUser.get().getAddress()).isEqualTo("Gotem City");
+
+        assertTrue(passwordEncoder.matches(RAW_PASSWORD, user.getPassword()));
+        ;
     }
 }

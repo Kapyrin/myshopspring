@@ -1,21 +1,20 @@
 package kapyrin.myshopspring.controller.user;
 
+import jakarta.servlet.http.HttpSession;
 import kapyrin.myshopspring.entity.Role;
 import kapyrin.myshopspring.entity.User;
-import kapyrin.myshopspring.service.impl.RoleImplService;
-import kapyrin.myshopspring.service.impl.UserImplService;
 import kapyrin.myshopspring.service.interfaces.RoleService;
 import kapyrin.myshopspring.service.interfaces.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jakarta.servlet.http.HttpSession;
-
 import java.util.Optional;
 
 @Controller
+@RequiredArgsConstructor
 public class CreateUserController {
 
     @Autowired
@@ -23,10 +22,6 @@ public class CreateUserController {
     @Autowired
     private final RoleService roleService;
 
-    public CreateUserController(UserImplService userService, RoleImplService roleService) {
-        this.userService = userService;
-        this.roleService = roleService;
-    }
 
     @PostMapping("/createUser")
     public String createUser(

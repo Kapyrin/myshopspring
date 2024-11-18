@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface UserService extends CrudOneParameterInMethod<User> {
     Optional<User> authenticate(String email, String password);
+    Optional<User> findByEmail(String email);
 }

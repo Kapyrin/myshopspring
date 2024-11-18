@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -41,7 +42,9 @@ class OrderControllerTest {
         utilUsersForController.notAuthenticatedUser(mockMvc, URL_CREATE_ORDER);
 
         user = utilUsersForController.getCustomerUser();
-        mockMvc.perform(get(URL_CREATE_ORDER).sessionAttr("user", user))
+        mockMvc.perform(get(URL_CREATE_ORDER)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("CUSTOMER"))
+                        .sessionAttr("user", user))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("order/createOrder"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("products"));
@@ -55,6 +58,7 @@ class OrderControllerTest {
         user = utilUsersForController.getCustomerUser();
         List<ShopOrder> customerOrdersBeforeAddOrder = shopOrderService.getAllOrdersByUserId(user.getId());
         mockMvc.perform(post(URL_CREATE_ORDER)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("CUSTOMER"))
                         .sessionAttr("user", user)
                         .param("quantity1", "1")
                         .param("quantity2", "2"))
@@ -71,7 +75,9 @@ class OrderControllerTest {
         utilUsersForController.notAuthenticatedUser(mockMvc, URL_CUSTOMER_ORDER);
 
         user = utilUsersForController.getCustomerUser();
-        mockMvc.perform(get(URL_CUSTOMER_ORDER).sessionAttr("user", user))
+        mockMvc.perform(get(URL_CUSTOMER_ORDER)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("CUSTOMER"))
+                .sessionAttr("user", user))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("order/customerOrders"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("user"))

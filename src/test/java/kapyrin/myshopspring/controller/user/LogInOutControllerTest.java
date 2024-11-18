@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -25,18 +24,24 @@ class LogInOutControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    UtilUsersForController utilUsersForController;
+    private UtilUsersForController utilUsersForController;
+
 
     private User adminUser;
     private User managerUser;
     private User customerUser;
 
+    private final String RAW_PASSWORD = "password";
+
+
+
     @Test
     void login_AdminUser_RedirectToAdmin() throws Exception {
         adminUser = utilUsersForController.getAdminUser();
+
         mockMvc.perform(post("/login")
                         .param("email", adminUser.getEmail())
-                        .param("password", adminUser.getPassword()))
+                        .param("password", RAW_PASSWORD))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/admin"));
     }
@@ -44,9 +49,10 @@ class LogInOutControllerTest {
     @Test
     void login_ManagerUser_RedirectToManagers() throws Exception {
         managerUser = utilUsersForController.getManagerUser();
+
         mockMvc.perform(post("/login")
                         .param("email", managerUser.getEmail())
-                        .param("password", managerUser.getPassword()))
+                        .param("password", RAW_PASSWORD))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/managers"));
     }
@@ -54,9 +60,10 @@ class LogInOutControllerTest {
     @Test
     void login_CustomerUser_RedirectToCustomerOrders() throws Exception {
         customerUser = utilUsersForController.getCustomerUser();
+
         mockMvc.perform(post("/login")
                         .param("email", customerUser.getEmail())
-                        .param("password", customerUser.getPassword()))
+                        .param("password", RAW_PASSWORD))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/customerOrders"));
     }
@@ -66,11 +73,11 @@ class LogInOutControllerTest {
         mockMvc.perform(post("/login")
                         .param("email", "invalid@mail.com")
                         .param("password", "wrong"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("user/login"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"))
-                .andExpect(MockMvcResultMatchers.model().attribute("errorMessage", "Invalid email or password."));
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/login?error"))
+                .andReturn();
     }
+
 
     @Test
     void logout() throws Exception {

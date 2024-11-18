@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,7 +43,9 @@ class ProductControllerTest {
         utilUsersForController.notAuthenticatedUser(mockMvc, URL_GET_PRODUCT);
 
         user = utilUsersForController.getManagerUser();
-        mockMvc.perform(get("/products").sessionAttr("user", user))
+        mockMvc.perform(get("/products")
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("MANAGER"))
+                        .sessionAttr("user", user))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("product/productManagement"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("products"));
@@ -54,7 +57,9 @@ class ProductControllerTest {
         utilUsersForController.notAuthenticatedUser(mockMvc, URL_GET_PRODUCT);
 
         user = utilUsersForController.getManagerUser();
-        mockMvc.perform(get(URL_ADD_PRODUCT).sessionAttr("user", user))
+        mockMvc.perform(get(URL_ADD_PRODUCT)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("MANAGER"))
+                        .sessionAttr("user", user))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("product/addProduct"));
 
@@ -66,7 +71,9 @@ class ProductControllerTest {
         utilUsersForController.notAuthenticatedUser(mockMvc, URL_GET_PRODUCT);
 
         User user = utilUsersForController.getManagerUser();
-        mockMvc.perform(post(URL_ADD_PRODUCT).sessionAttr("user", user)
+        mockMvc.perform(post(URL_ADD_PRODUCT)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("MANAGER"))
+                        .sessionAttr("user", user)
                         .param("productName", "Test Product")
                         .param("productDescription", "Test Description")
                         .param("productPrice", "2500.0")
@@ -91,6 +98,7 @@ class ProductControllerTest {
         product = productService.getById(1L).get();
 
         mockMvc.perform(get(URL_EDIT_PRODUCT)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("MANAGER"))
                         .sessionAttr("user", user)
                         .param("id", product.getId().toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -106,7 +114,9 @@ class ProductControllerTest {
         User user = utilUsersForController.getManagerUser();
         Product product = productService.getById(1L).get();
 
-        mockMvc.perform(post("/editProduct").sessionAttr("user", user)
+        mockMvc.perform(post("/editProduct")
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("MANAGER"))
+                        .sessionAttr("user", user)
                         .param("productId", product.getId().toString())
                         .param("productName", "Updated Product")
                         .param("productDescription", "Updated Description")
@@ -130,7 +140,9 @@ class ProductControllerTest {
 
         User user = utilUsersForController.getManagerUser();
         Product product = productService.getById(1L).get();
-        mockMvc.perform(post(URL_GET_PRODUCT).sessionAttr("user", user)
+        mockMvc.perform(post(URL_GET_PRODUCT)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("MANAGER"))
+                        .sessionAttr("user", user)
                         .param("productId", product.getId().toString())
                         .param("action", "delete"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())

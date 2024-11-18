@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,6 +31,10 @@ class CreateUserControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private UserService userService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    private final String RAW_PASSWORD = "password";
 
 
     @Test
@@ -45,13 +50,16 @@ class CreateUserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/customerOrders"));
 
-        Optional<User> createdUser = userService.authenticate("create@user.com", "password");
+        Optional<User> createdUser = userService.authenticate("create@user.com", RAW_PASSWORD);
         assertTrue(createdUser.isPresent());
-        assertThat(createdUser.get().getFirstName()).isEqualTo("Create");
-        assertThat(createdUser.get().getLastName()).isEqualTo("User");
-        assertThat(createdUser.get().getEmail()).isEqualTo("create@user.com");
-        assertThat(createdUser.get().getPassword()).isEqualTo("password");
-        assertThat(createdUser.get().getPhoneNumber()).isEqualTo("+345043435");
-        assertThat(createdUser.get().getAddress()).isEqualTo("city");
+
+        User user = createdUser.get();
+        assertThat(user.getFirstName()).isEqualTo("Create");
+        assertThat(user.getLastName()).isEqualTo("User");
+        assertThat(user.getEmail()).isEqualTo("create@user.com");
+        assertThat(user.getPhoneNumber()).isEqualTo("+345043435");
+        assertThat(user.getAddress()).isEqualTo("city");
+
+        assertTrue(passwordEncoder.matches(RAW_PASSWORD, user.getPassword()));
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -65,8 +66,9 @@ class ReportControllerTest {
 
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String expectedFileName = "userOrdersReport" + currentDate + ".txt";
-
+        user = utilUsersForController.getManagerUser();
         mockMvc.perform(get(URL_REPORT)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("MANAGER"))
                         .param("reportType", "usersOrders")
                         .sessionAttr("users", customers)
                         .sessionAttr("userOrders", userOrders))
@@ -82,7 +84,9 @@ class ReportControllerTest {
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String expectedFileName = "allUsersReport" + currentDate + ".txt";
 
+        user = utilUsersForController.getAdminUser();
         mockMvc.perform(get(URL_REPORT)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("ADMIN"))
                         .param("reportType", "allUsers")
                         .sessionAttr("users", allUsers))
                 .andExpect(status().isOk())
@@ -102,7 +106,9 @@ class ReportControllerTest {
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String expectedFileName = "userPersonalOrdersReport" + currentDate + ".txt";
 
+        user = utilUsersForController.getCustomerUser();
         mockMvc.perform(get(URL_REPORT)
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles("CUSTOMER"))
                         .param("reportType", "userOrders")
                         .sessionAttr("orders", orders))
                 .andDo(print())

@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-
 class UserServiceTest extends AbstractTest {
 
     @Autowired
@@ -29,18 +28,21 @@ class UserServiceTest extends AbstractTest {
     protected RoleService roleService;
     @Autowired
     ServiceTestUtil serviceTestUtil;
+
     protected User testUser;
+
+    private final String RAW_PASSWORD = "password";
 
 
     @Test
     void authenticate() {
-        Optional<User> testUser = userService.authenticate("bla@bla.com", "password");
-        assertTrue(testUser.isPresent());
-        assertTrue("Tver".equals(testUser.get().getAddress()));
-        assertTrue("+7999324023".equals(testUser.get().getPhoneNumber()));
-        assertTrue("Customer".equals(testUser.get().getFirstName()));
+             Optional<User> testOptionalUser = userService.authenticate("bla@bla.com", RAW_PASSWORD);
+        assertTrue(testOptionalUser.isPresent());
+        assertTrue("Tver".equals(testOptionalUser.get().getAddress()));
+        assertTrue("+7999324023".equals(testOptionalUser.get().getPhoneNumber()));
+        assertTrue("Customer".equals(testOptionalUser.get().getFirstName()));
 
-        Optional<User> testWrongUser = userService.authenticate("wrong@user.com", "password");
+        Optional<User> testWrongUser = userService.authenticate("wrong@user.com", RAW_PASSWORD);
         assertFalse(testWrongUser.isPresent());
     }
 
@@ -69,14 +71,14 @@ class UserServiceTest extends AbstractTest {
                 .firstName("Donald")
                 .lastName("Trump")
                 .email("donald@trump.com")
-                .password("password")
+                .password(RAW_PASSWORD)
                 .phoneNumber("1234")
                 .address("White House")
-                .role(roleService.getByRoleName("admin").get())
+                .role(roleService.getById(1L).get())
                 .build();
 
         userService.add(addedUser);
-        Optional<User> testFoundUser = userService.authenticate("donald@trump.com", "password");
+        Optional<User> testFoundUser = userService.authenticate("donald@trump.com", RAW_PASSWORD);
         assertTrue(testFoundUser.isPresent());
         assertEquals("White House", testFoundUser.get().getAddress());
     }
@@ -86,7 +88,7 @@ class UserServiceTest extends AbstractTest {
         String newPhoneNumber = "+19099096655";
         testUser.setPhoneNumber(newPhoneNumber);
         userService.update(testUser);
-        Optional<User> testFoundUser = userService.authenticate(testUser.getEmail(), testUser.getPassword());
+        Optional<User> testFoundUser = userService.authenticate(testUser.getEmail(), RAW_PASSWORD);
         assertEquals(newPhoneNumber, testFoundUser.get().getPhoneNumber());
     }
 
@@ -106,6 +108,7 @@ class UserServiceTest extends AbstractTest {
     @Override
     protected void createTestEntity() {
         testUser = serviceTestUtil.customer();
+
     }
 
     @Override
