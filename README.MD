@@ -25,3 +25,5 @@
 - apply V1__init.sql
 - to start from idea: Run-> Edit configuration -> TomCat 10,
   Deployment <span style="color:yellow; font-size:15px;">/</span>
+
+add Jenkins
