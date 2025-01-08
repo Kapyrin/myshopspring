@@ -6,8 +6,8 @@ import kapyrin.myshopspring.entity.*;
 import kapyrin.myshopspring.exception.entity.OrderStatusException;
 import kapyrin.myshopspring.service.impl.OrderStatusImplService;
 import kapyrin.myshopspring.service.impl.ProductImplService;
-import kapyrin.myshopspring.service.impl.ProductOrderImplService;
-import kapyrin.myshopspring.service.impl.ShopOrderImplService;
+import kapyrin.myshopspring.service.interfaces.ProductOrderService;
+import kapyrin.myshopspring.service.interfaces.ShopOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,9 +28,9 @@ public class OrderController {
     @Autowired
     private ProductImplService productService;
     @Autowired
-    private ShopOrderImplService shopOrderService;
+    private ShopOrderService shopOrderService;
     @Autowired
-    private ProductOrderImplService productOrderService;
+    private ProductOrderService productOrderService;
     @Autowired
     private OrderStatusImplService orderStatusService;
 

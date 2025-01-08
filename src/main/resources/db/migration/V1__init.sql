@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
                                      first_name   VARCHAR(50)        NOT NULL,
                                      last_name    VARCHAR(50)        NOT NULL,
                                      email        VARCHAR(50) UNIQUE NOT NULL,
-                                     password     VARCHAR(50)        NOT NULL,
+                                     password     VARCHAR(60)        NOT NULL,
                                      phone_number VARCHAR(20) UNIQUE NOT NULL,
                                      address      VARCHAR(100)       NOT NULL,
                                      role_id      BIGINT,
@@ -63,3 +63,4 @@ INSERT INTO product (product_name, product_description, price, product_remain) V
                                                                                    ('Monitor Acer', 'TFT 27 inch', 26000.0, 20),
                                                                                    ('Unit AMD', 'Powered by AMD', 35000.0, 50),
                                                                                    ('Unit Intel', 'Powered by Intel', 30000.0, 50);
+SELECT * FROM flyway_schema_history;

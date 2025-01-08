@@ -48,7 +48,7 @@ public class ReportController {
                 }
 
                 reportContent = reportStringGenerator.fromUsersOrders(onlyCustomers, userOrders);
-                fileName = "userOrdersReport.txt";
+                fileName = "userOrdersReport";
                 break;
 
             case "allUsers":
@@ -59,7 +59,7 @@ public class ReportController {
                 }
 
                 reportContent = reportStringGenerator.fromUserList(allUsers);
-                fileName = "allUsersReport.txt";
+                fileName = "allUsersReport";
                 break;
 
             case "userOrders":
@@ -70,7 +70,7 @@ public class ReportController {
                 }
 
                 reportContent = reportStringGenerator.fromUserOrders(personalOrders, session);
-                fileName = "userPersonalOrdersReport.txt";
+                fileName = "userPersonalOrdersReport";
                 break;
 
             default:

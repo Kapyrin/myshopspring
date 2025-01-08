@@ -1,0 +1,46 @@
+{
+  "family": "myshopspring-task",
+  "requiresCompatibilities": ["FARGATE"],
+  "networkMode": "awsvpc",
+  "executionRoleArn": "arn:aws:iam::471112889185:role/ecsTaskExecutionRole",
+  "cpu": "256",
+  "memory": "512",
+  "containerDefinitions": [
+    {
+      "name": "myshopspring-container",
+      "image": "471112889185.dkr.ecr.eu-west-1.amazonaws.com/myshopspring:latest",
+      "cpu": 256,
+      "memory": 512,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "SPRING_DATASOURCE_URL",
+          "value": "jdbc:mysql://db:3306/shop"
+        },
+        {
+          "name": "SPRING_DATASOURCE_USERNAME",
+          "value": "root"
+        },
+        {
+          "name": "SPRING_DATASOURCE_PASSWORD",
+          "value": "root"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/myshopspring-task",
+          "awslogs-region": "eu-west-1",
+          "awslogs-stream-prefix": "myshopspring"
+        }
+      }
+    }
+  ]
+}

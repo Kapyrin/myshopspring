@@ -1,0 +1,6 @@
+ID    First Name      Last Name       Email                          Password        Phone Number         Address             
+---------------------------------------------------------------------------------------------------
+1     Main            Admin           admin@admin.ru                 $2a$10$LRjsrby8q3DBWiEFmiCn1.aEiUXozePemEFcIhkdw.G5kYbP9R/oW +79997057796         Bryansk             
+2     Bill            Gates           bill@microsot.com              $2a$10$1cPy8AO4u1issvhp11uU1OEiIAcsLirMnw5nqJ0domeu5lwFWHVya 0987654321           Ostin               
+3     Vladimir        Kapyrin         vladimir.kapyrin@gmail.com     $2a$10$w9vK3ZUJT3h0Y.EkybKMJecytid6QYFzZaEJEnamoCYimdIIQ6t6K 1234567890           Russia              
+4     Elon            Musk            elon@tesla.com                 $2a$10$uzcMruZSdZPwv62wz2i2Beb/FJxQSjHkBD0XMuYFFKn8i4KfB8g.e 1234509876           Redmond             
