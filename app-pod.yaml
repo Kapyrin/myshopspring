@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.1 (a9d05d509)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/shop_network: "true"
+    io.kompose.service: app
+  name: app
+spec:
+  containers:
+    - env:
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: root
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:mysql://db:3306/shop
+        - name: SPRING_DATASOURCE_USERNAME
+          value: root
+      image: app
+      name: app
+      ports:
+        - containerPort: 8080
+      resources: {}
+  restartPolicy: OnFailure
+status: {}

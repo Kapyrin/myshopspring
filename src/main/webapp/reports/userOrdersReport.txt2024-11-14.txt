@@ -1,0 +1,14 @@
+Customers and their orders:
+----------------------------------------------------------
+Customer: Main Admin (ID: 1)
+  No orders yet.
+----------------------------------------------------------
+Customer: Bill Gates (ID: 2)
+  No orders yet.
+----------------------------------------------------------
+Customer: Vladimir Kapyrin (ID: 3)
+  No orders yet.
+----------------------------------------------------------
+Customer: Elon Musk (ID: 4)
+  No orders yet.
+----------------------------------------------------------

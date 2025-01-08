@@ -1,0 +1,3 @@
+Order ID   Order creation date  Order status         Total Amount   
+--------------------------------------------------------------------
+1          2024-11-11           testStatus           N/A            
