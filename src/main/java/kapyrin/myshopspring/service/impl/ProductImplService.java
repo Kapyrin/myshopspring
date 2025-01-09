@@ -4,6 +4,7 @@ import kapyrin.myshopspring.entity.Product;
 import kapyrin.myshopspring.exception.entity.ProductException;
 import kapyrin.myshopspring.repository.ProductRepository;
 import kapyrin.myshopspring.service.interfaces.CrudOneParameterInMethod;
+import kapyrin.myshopspring.service.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductImplService implements CrudOneParameterInMethod<Product> {
     private final ProductRepository productRepository;
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaProducer kafkaProducer;
 
     private static final String TOPIC = "product-topic";
 
@@ -27,7 +28,7 @@ public class ProductImplService implements CrudOneParameterInMethod<Product> {
         try {
             productRepository.deleteById(id);
             log.info("Deleted product with id {}", id);
-            sendToKafka("Deleted product with id " + id);
+            kafkaProducer.sendMessage(TOPIC, "Deleted product with id " + id);
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new ProductException("Failed to delete product with id " + id);
@@ -54,7 +55,7 @@ public class ProductImplService implements CrudOneParameterInMethod<Product> {
         try {
             productRepository.save(entity);
             log.info("Added product {}", entity);
-            sendToKafka("Added product " + entity);
+            kafkaProducer.sendMessage(TOPIC, "Added product " + entity);
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new ProductException("Failed to add product " + entity);
@@ -67,7 +68,7 @@ public class ProductImplService implements CrudOneParameterInMethod<Product> {
         try {
             productRepository.save(entity);
             log.info("Updated product {}", entity);
-            sendToKafka("Updated product " + entity);
+            kafkaProducer.sendMessage(TOPIC, "Updated product " + entity);
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new ProductException("Failed to update product " + entity);
@@ -80,7 +81,7 @@ public class ProductImplService implements CrudOneParameterInMethod<Product> {
         try {
             productRepository.delete(entity);
             log.info("Deleted product {}", entity);
-            sendToKafka("Deleted product " + entity);
+            kafkaProducer.sendMessage(TOPIC, "Deleted product " + entity);
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new ProductException("Failed to delete product " + entity);
@@ -97,16 +98,6 @@ public class ProductImplService implements CrudOneParameterInMethod<Product> {
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new ProductException("Failed to find all products");
-        }
-    }
-
-    private void sendToKafka(String message) {
-        String key = "product";
-        try {
-            log.info("Sending message to Kafka with key {}: {}", key, message);
-            kafkaTemplate.send(TOPIC, message);
-        } catch (Exception e) {
-            log.error("Failed to send message to Kafka: {}", e.getMessage());
         }
     }
 }
