@@ -26,4 +26,6 @@
 - to start from idea: Run-> Edit configuration -> TomCat 10,
   Deployment <span style="color:yellow; font-size:15px;">/</span>
 
-add Jenkins
+### Added Kafka:
+- Run docker-compose up --build
+- Then with manager account after manipulation of the products: add, remove, edit you can see information about this in console.
