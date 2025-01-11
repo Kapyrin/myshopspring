@@ -2,6 +2,7 @@ package kapyrin.myshopspring.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kapyrin.myshopspring.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -22,6 +23,11 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
                 .findFirst()
                 .map(authority -> authority.getAuthority())
                 .orElse("ROLE_UNKNOWN");
+
+        UserSecurityAdapter userSecurityAdapter = (UserSecurityAdapter) authentication.getPrincipal();
+        User user = userSecurityAdapter.getUser();
+        request.getSession().setAttribute("user", user);
+
         log.info("Authentication success with role:: " + role);
 
         switch (role) {

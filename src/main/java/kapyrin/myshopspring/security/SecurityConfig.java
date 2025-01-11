@@ -31,17 +31,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
               http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/language").permitAll()
-                        .requestMatchers("/login").not().authenticated()
-                        .requestMatchers("/createUser").permitAll()
-                        .requestMatchers("/admin/", "/editUser", "/findUserById", "/deleteUser").hasRole("ADMIN")
-                        .requestMatchers("/customerOrders/", "/createOrder/").hasRole("CUSTOMER")
-                        .requestMatchers("/editProduct/", "/managers/", "/addProduct", "/products").hasRole("MANAGER")
-                        .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
+                      .authorizeHttpRequests(auth -> auth
+                              .requestMatchers("/admin", "/editUser", "/findUserById", "/deleteUser").hasRole("ADMIN")
+                              .requestMatchers("/customerOrders", "/createOrder").hasRole("CUSTOMER")
+                              .requestMatchers("/editProduct", "/managers", "/addProduct", "/products").hasRole("MANAGER")
+                              .requestMatchers("/", "/language", "/createUser", "/login").permitAll()
+                              .anyRequest().authenticated()
+                      )
+                      .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
